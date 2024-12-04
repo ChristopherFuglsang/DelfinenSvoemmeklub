@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Svoemmeklub {
+public class Svoemmeklub
+{
     private static List<Medlemmer> medlemmerListe = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -14,10 +15,11 @@ public class Svoemmeklub {
             System.out.println("1. Opret nyt medlem");
             System.out.println("2. Vis alle medlemmer");
             System.out.println("3. Beregning af kontingent");
-            System.out.println("4. Vis medlemmer i restance");
-            System.out.println("5. Registrer konkurrenceresultater");
-            System.out.println("6. Vis Top-5 svømmere");
-            System.out.println("7. Afslut programmet");
+            System.out.println("4. Vis samlet kontingent for alle medlemmer");
+            System.out.println("5. Vis medlemmer i restance");
+            System.out.println("6. Registrer konkurrenceresultater");
+            System.out.println("7. Vis Top-5 svømmere");
+            System.out.println("8. Afslut programmet");
             System.out.print("Vælg en mulighed: ");
 
             int valg = scanner.nextInt();
@@ -34,15 +36,18 @@ public class Svoemmeklub {
                     beregnKontingent(scanner);
                     break;
                 case 4:
-                    visRestanceMedlemmer();
+                    visSamletKontingent();
                     break;
                 case 5:
-                    registrerResultat(scanner);
+                    visRestanceMedlemmer();
                     break;
                 case 6:
-                    visTop5();
+                    registrerResultat(scanner);
                     break;
                 case 7:
+                    visTop5();
+                    break;
+                case 8:
                     System.out.println("Programmet afsluttes.");
                     running = false;
                     break;
@@ -100,6 +105,16 @@ public class Svoemmeklub {
         }
     }
 
+    private static void visSamletKontingent()
+    {
+        double samletKontingent = 0.0;
+        for (Medlemmer medlem : medlemmerListe)
+        {
+            samletKontingent += medlem.beregnKontingent();
+        }
+        System.out.println("Den samlede kontingent for alle medlemmer er: " + samletKontingent + " kr.");
+    }
+
     private static void visRestanceMedlemmer() {
         System.out.println("Medlemmer i restance:");
         boolean found = false;
@@ -148,7 +163,8 @@ public class Svoemmeklub {
         System.out.println("Resultat registreret for disciplin: " + disciplin.getNavn() + " med tid: " + tid);
     }
 
-    private static void visTop5() {
-        System.out.println("Viser top 5 svømmere...");
+    private static void visTop5()
+    {
+        System.out.println("Viser Top-5 svømmere...");
     }
 }
