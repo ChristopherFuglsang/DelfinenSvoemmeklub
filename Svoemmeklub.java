@@ -2,11 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Svoemmeklub
-{
+public class Svoemmeklub {
     private static List<Medlemmer> medlemmerListe = new ArrayList<>();
 
     public static void main(String[] args) {
+        medlemmerListe = Persistens.laesData();
+        if (medlemmerListe == null)
+        {
+            medlemmerListe = new ArrayList<>();
+        }
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -48,7 +52,8 @@ public class Svoemmeklub
                     visTop5();
                     break;
                 case 8:
-                    System.out.println("Programmet afsluttes.");
+                    System.out.println("Gemmer data og programmet afsluttes.");
+                    Persistens.gemData(medlemmerListe);
                     running = false;
                     break;
                 default:
@@ -125,7 +130,6 @@ public class Svoemmeklub
                 System.out.println("Navn: " + medlem.getNavn() + ", ID: " + medlem.getMedlemsID());
             }
         }
-
         if (!found) {
             System.out.println("Ingen medlemmer i restance.");
         }
@@ -165,6 +169,6 @@ public class Svoemmeklub
 
     private static void visTop5()
     {
-        System.out.println("Viser Top-5 svømmere...");
+        System.out.println("Viser Top-5 svømmere.");
     }
 }
