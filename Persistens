@@ -1,0 +1,97 @@
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+
+public class Persistens
+{
+    private static final String FILNAVN = "svømmeklub_data.txt";
+
+    // Metode til at gemme data
+    public static void gemData(List<Medlemmer> medlemmerListe)
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILNAVN)))
+        {
+            for (Medlemmer medlem : medlemmerListe) {
+                String data = formatMedlem(medlem); // Formater medlem som tekst
+                writer.write(data);
+                writer.newLine(); // Tilføj en ny linje
+            }
+            System.out.println("Data gemt succesfuldt!");
+        } catch (IOException e) {
+            System.out.println("Fejl ved gemning af data: " + e.getMessage());
+        }
+    }
+
+    // Metode til at læse data
+    public static List<Medlemmer> laesData() {
+        List<Medlemmer> medlemmerListe = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILNAVN))) {
+            StringBuilder medlemData = new StringBuilder();
+            String linje;
+
+            while ((linje = reader.readLine()) != null) {
+                if (linje.trim().isEmpty()) { // Når vi støder på en tom linje
+                    if (medlemData.length() > 0) {
+                        try {
+                            Medlemmer medlem = parseMedlem(medlemData.toString());
+                            medlemmerListe.add(medlem);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Springer ugyldig medlem: " + medlemData);
+                        }
+                        medlemData.setLength(0); // Nulstil til næste medlem
+                    }
+                } else {
+                    medlemData.append(linje).append("%n");
+                }
+            }
+
+            // Håndter sidste medlem i filen
+            if (medlemData.length() > 0) {
+                try {
+                    Medlemmer medlem = parseMedlem(medlemData.toString());
+                    medlemmerListe.add(medlem);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Springer ugyldig medlem: " + medlemData);
+                }
+            }
+
+            System.out.println("Data indlæst succesfuldt!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Ingen tidligere data fundet. Starter med tom liste.");
+        } catch (IOException e) {
+            System.out.println("Fejl ved indlæsning af data: " + e.getMessage());
+        }
+        return medlemmerListe;
+    }
+
+    // Hjælpefunktion: Formater et medlem som en tekstlinje
+    private static String formatMedlem(Medlemmer medlem)
+    {
+        return String.format(
+        "Navn: %s%nTelefonnummer: %s%nEmail: %s%nAdresse: %s%nCPR: %s%nMedlemsID: %d%nAktiv: %b%nKonkurrencesvømmer: %b%n",
+                medlem.getNavn(),
+                medlem.getTelefonnummer(),
+                medlem.getEmail(),
+                medlem.getAdresse(),
+                medlem.getCprNr().getCprNr(),
+                medlem.getMedlemsID(),
+                medlem.isAktiv(),
+                medlem.isKonkurrencesvoemmer());
+    }
+
+    // Hjælpefunktion: Konverter en tekstlinje til et medlem
+    private static Medlemmer parseMedlem(String linje)
+    {
+        String[] lines = linje.split("%n");
+        String navn = lines[0].split(": ")[1].trim();
+        int telefonnummer = Integer.parseInt(lines[1].split(": ")[1].trim());
+        String email = lines[2].split(": ")[1].trim();
+        String adresse = lines[3].split(": ")[1].trim();
+        CprNr cprNr = new CprNr(lines[4].split(": ")[1].trim());
+        int medlemsID = Integer.parseInt(lines[5].split(": ")[1].trim());
+        boolean aktiv = Boolean.parseBoolean(lines[6].split(": ")[1].trim());
+        boolean konkurrencesvoemmer = Boolean.parseBoolean(lines[7].split(": ")[1].trim());
+
+        return new Medlemmer(navn, telefonnummer, email, adresse, cprNr, medlemsID, aktiv, cprNr.getAlder(), konkurrencesvoemmer);
+    }
+}
