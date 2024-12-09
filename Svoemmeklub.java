@@ -19,11 +19,12 @@ public class Svoemmeklub {
             System.out.println("1. Opret nyt medlem");
             System.out.println("2. Vis alle medlemmer");
             System.out.println("3. Beregning af kontingent");
-            System.out.println("4. Vis samlet kontingent for alle medlemmer");
-            System.out.println("5. Vis medlemmer i restance");
-            System.out.println("6. Registrer konkurrenceresultater");
-            System.out.println("7. Vis Top-5 svømmere");
-            System.out.println("8. Afslut programmet");
+            System.out.println("4. Registrer betaling af kontingent");
+            System.out.println("5. Vis samlet kontingent for alle medlemmer");
+            System.out.println("6. Vis medlemmer i restance");
+            System.out.println("7. Registrer konkurrenceresultater");
+            System.out.println("8. Vis Top-5 svømmere");
+            System.out.println("9. Afslut programmet");
             System.out.print("Vælg en mulighed: ");
 
             int valg = scanner.nextInt();
@@ -40,18 +41,21 @@ public class Svoemmeklub {
                     beregnKontingent(scanner);
                     break;
                 case 4:
-                    visSamletKontingent();
+                    registrerBetaling(scanner);
                     break;
                 case 5:
-                    visRestanceMedlemmer();
+                    visSamletKontingent();
                     break;
                 case 6:
-                    registrerResultat(scanner);
+                    visRestanceMedlemmer();
                     break;
                 case 7:
-                    visTop5();
+                    registrerResultat(scanner);
                     break;
                 case 8:
+                    visTop5(scanner);
+                    break;
+                case 9:
                     System.out.println("Gemmer data og programmet afsluttes.");
                     Persistens.gemData(medlemmerListe);
                     running = false;
@@ -110,6 +114,27 @@ public class Svoemmeklub {
         }
     }
 
+    private static void registrerBetaling(Scanner scanner) {
+        System.out.print("Indtast medlemsID for at registrere betaling: ");
+        int medlemsID = scanner.nextInt();
+        scanner.nextLine(); // Ryd scanner-bufferen
+
+        Medlemmer medlem = findMedlemVedID(medlemsID);
+        if (medlem != null) {
+            if (erBetalt(medlem)) {
+                System.out.println("Medlemmet har allerede betalt.");
+                return;
+            }
+            System.out.print("Indtast betalingsdato (format: ÅÅÅÅ-MM-DD): ");
+            String betalingsDato = scanner.nextLine();
+
+            medlem.getBetaling().registrerBetaling(betalingsDato);
+            System.out.println("Betaling registreret for " + medlem.getNavn() + ". Betalingsdato: " + betalingsDato);
+        } else {
+            System.out.println("Medlem med ID " + medlemsID + " blev ikke fundet.");
+        }
+    }
+
     private static void visSamletKontingent()
     {
         double samletKontingent = 0.0;
@@ -150,25 +175,43 @@ public class Svoemmeklub {
     }
 
     private static void registrerResultat(Scanner scanner) {
+        System.out.print("Indtast medlemsID: ");
+        int medlemsID = scanner.nextInt();
+        scanner.nextLine(); // Ryd scanner-bufferen
+
         System.out.print("Indtast disciplin (BUTTERFLY/CRAWL/RYGCRAWL/BRYSTSVØMNING): ");
-        String disciplinInput = scanner.nextLine();
-        StilType disciplin = StilType.valueOf(disciplinInput.toUpperCase());
+        String disciplin = scanner.nextLine();
 
         System.out.print("Indtast tid: ");
         double tid = scanner.nextDouble();
+        scanner.nextLine();
 
-        System.out.print("Indtast dato (år, måned, dag separat): ");
-        int år = scanner.nextInt();
-        int måned = scanner.nextInt();
-        int dag = scanner.nextInt();
+        System.out.print("Indtast dato (år-måned-dag): ");
+        String dato = scanner.nextLine();
 
-        Dato dato = new Dato(år, måned, dag);
-        Resultat resultat = new Resultat(disciplin, tid, dato, ResultatType.TRÆNING);
-        System.out.println("Resultat registreret for disciplin: " + disciplin.getNavn() + " med tid: " + tid);
+        // Gem resultat i filen via Persistens-klassen
+        Persistens.gemTid(medlemsID, disciplin, tid, dato);
+
+        System.out.println("Resultat registreret: MedlemsID: " + medlemsID + ", Disciplin: " + disciplin + ", Tid: " + tid + ", Dato: " + dato);
     }
 
-    private static void visTop5()
+
+    private static void visTop5(Scanner scanner)
     {
-        System.out.println("Viser Top-5 svømmere.");
+        System.out.print("Indtast disciplin (BUTTERFLY/CRAWL/RYGCRAWL/BRYSTSVØMNING): ");
+        String disciplin = scanner.nextLine();
+
+        List<String> top5Tider = Persistens.hentTop5Svømmetider(disciplin);
+
+        System.out.println("Top-5 tider for disciplin: " + disciplin);
+        if (top5Tider.isEmpty()) {
+            System.out.println("Ingen tider registreret for denne disciplin.");
+        } else {
+            for (int i = 0; i < top5Tider.size(); i++) {
+                String[] data = top5Tider.get(i).split(";");
+                System.out.printf("%d. MedlemsID: %s, Tid: %s, Dato: %s%n",
+                        i + 1, data[0], data[2], data[3]);
+            }
+        }
     }
 }
