@@ -152,7 +152,7 @@ public class Svoemmeklub {
         for (Medlemmer medlem : medlemmerListe) {
             if (!erBetalt(medlem)) {
                 found = true;
-                System.out.println("Navn: " + medlem.getNavn() + ", ID: " + medlem.getMedlemsID());
+                System.out.println("Navn: " + medlem.getNavn() + ", ID: " + medlem.getMedlemsID() + " | " + medlem.beregnKontingent() +"kr.");
             }
         }
         if (!found) {
