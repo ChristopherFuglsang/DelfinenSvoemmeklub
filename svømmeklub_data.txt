@@ -1,0 +1,36 @@
+Navn: Chris
+Telefonnummer: 50737649
+Email: christeinfugl@gmail.com
+Adresse: sniudba 1
+CPR: 0502015575
+MedlemsID: 1
+Aktiv: true
+Konkurrencesvømmer: true
+Betalt: true
+Betalingsdato: 2024-12-10
+Udløbsdato: 2025-12-10
+
+Navn: merry
+Telefonnummer: 502143424
+Email: merry@gmail.com
+Adresse: merry 1
+CPR: 0502015579
+MedlemsID: 2
+Aktiv: true
+Konkurrencesvømmer: true
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
+Navn: Peter
+Telefonnummer: 78596235
+Email: Peter@madsen.com
+Adresse: Acab gade 12
+CPR: 1802082689
+MedlemsID: 3
+Aktiv: true
+Konkurrencesvømmer: false
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
