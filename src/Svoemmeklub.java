@@ -174,7 +174,7 @@ public class Svoemmeklub {
         for (Medlemmer medlem : medlemmerListe) {
             if (!erBetalt(medlem)) {
                 found = true;
-                System.out.println("Navn: " + medlem.getNavn() + ", ID: " + medlem.getMedlemsID() + " | " + medlem.beregnKontingent() +"kr.");
+                System.out.println("Navn: " + medlem.getNavn() + ", ID: " + medlem.getMedlemsID() + " | Kontigent: " + medlem.beregnKontingent()+"kr.");
             }
         }
         if (!found) {
@@ -286,22 +286,28 @@ public class Svoemmeklub {
     private static void registrerResultat(Scanner scanner) {
         System.out.print("Indtast medlemsID: ");
         int medlemsID = scanner.nextInt();
-        scanner.nextLine(); // Ryd scanner-bufferen
+        scanner.nextLine(); // Clear scanner buffer
 
         System.out.print("Indtast disciplin (BUTTERFLY/CRAWL/RYGCRAWL/BRYSTSVØMNING): ");
         String disciplin = scanner.nextLine();
 
         System.out.print("Indtast tid: ");
         double tid = scanner.nextDouble();
-        scanner.nextLine();
+        scanner.nextLine(); // Clear scanner buffer
 
         System.out.print("Indtast dato (år-måned-dag): ");
         String dato = scanner.nextLine();
 
-        // Gem resultat i filen via Persistens-klassen
-        Persistens.gemTid(medlemsID, disciplin, tid, dato);
-
-        System.out.println("Resultat registreret: MedlemsID: " + medlemsID + ", Disciplin: " + disciplin + ", Tid: " + tid + ", Dato: " + dato);
+        // Retrieve the member by ID
+        Medlemmer medlem = findMedlemVedID(medlemsID);
+        if (medlem != null) {
+            String navn = medlem.getNavn(); // Get the name of the member
+            // Call Persistens to save the result
+            Persistens.gemTid(medlemsID, disciplin, tid, dato, navn);
+            System.out.println("Resultat registreret: Navn: " + navn + ", MedlemsID: " + medlemsID + ", Disciplin: " + disciplin + ", Tid: " + tid + ", Dato: " + dato);
+        } else {
+            System.out.println("Medlem med ID " + medlemsID + " blev ikke fundet.");
+        }
     }
 
     private static void visTop5(Scanner scanner)
@@ -317,8 +323,8 @@ public class Svoemmeklub {
         } else {
             for (int i = 0; i < top5Tider.size(); i++) {
                 String[] data = top5Tider.get(i).split(";");
-                System.out.printf("%d. MedlemsID: %s, Tid: %s, Dato: %s%n",
-                        i + 1, data[0], data[2], data[3]);
+                System.out.printf("%d. MedlemsID: %s, Tid: %s, Dato: %s. Navn: %s%n" ,
+                        i + 1, data[0], data[2], data[3], data[4]);
             }
         }
     }

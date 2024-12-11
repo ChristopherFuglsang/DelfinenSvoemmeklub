@@ -45,14 +45,11 @@ public class Betaling
     }
 
     private String beregnUdloebsDato(String betalingsDato) {
-        // Formater dato-strengen til LocalDate
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dato = LocalDate.parse(betalingsDato, formatter);
 
-        // Tilføj et år til betalingsdatoen
         LocalDate udloebsDato = dato.plusYears(1);
 
-        // Returner som formatteret string
         return udloebsDato.format(formatter);
     }
 }

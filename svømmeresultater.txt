@@ -1,0 +1,8 @@
+1;Butterfly;52,07;1990-02-01;Kristian Meyer Steffensen
+2;Butterfly;51,94;1996-02-04;Merry Jonathan Mitchell
+3;Butterfly;51,93;1997-02-05;Christopher Fuglsang
+5;Butterfly;51,16;1998-01-22;Jonathan Rander
+1;Crawl;20,96;2009-04-26;Kristian Meyer Steffensen
+2;Crawl;20,91;2009-12-18;Merry Jonathan Mitchell
+3;Crawl;21,28;2008-03-28;Christopher Fuglsang
+5;Crawl;21,56;2008-02-17;Jonathan Rander

@@ -1,0 +1,60 @@
+Navn: Kristian Meyer Steffensen
+Telefonnummer: 10101010
+Email: krst0003@stud.kea.dk
+Adresse: Krisianvej 6
+CPR: 2511025691
+MedlemsID: 1
+Aktiv: true
+Konkurrencesvømmer: true
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
+Navn: Merry Jonathan Mitchell
+Telefonnummer: 90909090
+Email: memi0001@stud.kea.dk
+Adresse: Merryvej 27
+CPR: 0101010001
+MedlemsID: 2
+Aktiv: true
+Konkurrencesvømmer: true
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
+Navn: Christopher Fuglsang
+Telefonnummer: 20202020
+Email: chfu0002@stud.kea.dk
+Adresse: Chrisgade 9
+CPR: 0202009812
+MedlemsID: 3
+Aktiv: true
+Konkurrencesvømmer: true
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
+Navn: Magnus Beyer Andersen
+Telefonnummer: 12345678
+Email: maan0011@stud.kea.dk
+Adresse: Magnusgade 55
+CPR: 0101112556
+MedlemsID: 4
+Aktiv: true
+Konkurrencesvømmer: false
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
+Navn: Jonathan Rander
+Telefonnummer: 56781234
+Email: jora0005@stud.kea.dk
+Adresse: Jonathanvej 6
+CPR: 0909098899
+MedlemsID: 5
+Aktiv: false
+Konkurrencesvømmer: true
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+

@@ -6,15 +6,15 @@ import java.util.ArrayList;
 public class Persistens {
     private static final String FILNAVN = "svømmeklub_data.txt";
     private static final String FILNAVN2 = "svømmeresultater.txt";
-    private static final String FILNAVN3 = "traener_data.txt";
+    private static final String FILNAVN3 = "træner_data.txt";
 
     // Metode til at gemme data
     public static void gemData(List<Medlemmer> medlemmerListe) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILNAVN))) {
             for (Medlemmer medlem : medlemmerListe) {
-                String data = formatMedlem(medlem); // Formater medlem som tekst
+                String data = formatMedlem(medlem);
                 writer.write(data);
-                writer.newLine(); // Tilføj en ny linje
+                writer.newLine();
             }
             System.out.println("Data gemt succesfuldt!");
         } catch (IOException e) {
@@ -30,7 +30,7 @@ public class Persistens {
             String linje;
 
             while ((linje = reader.readLine()) != null) {
-                if (linje.trim().isEmpty()) { // Når vi støder på en tom linje
+                if (linje.trim().isEmpty()) {
                     if (medlemData.length() > 0) {
                         try {
                             Medlemmer medlem = parseMedlem(medlemData.toString());
@@ -38,14 +38,12 @@ public class Persistens {
                         } catch (IllegalArgumentException e) {
                             System.out.println("Springer ugyldig medlem: " + medlemData);
                         }
-                        medlemData.setLength(0); // Nulstil til næste medlem
+                        medlemData.setLength(0);
                     }
                 } else {
                     medlemData.append(linje).append("%n");
                 }
             }
-
-            // Håndter sidste medlem i filen
             if (medlemData.length() > 0) {
                 try {
                     Medlemmer medlem = parseMedlem(medlemData.toString());
@@ -64,10 +62,9 @@ public class Persistens {
         return medlemmerListe;
     }
 
-    // Hjælpefunktion: Formater et medlem som en tekstlinje
     private static String formatMedlem(Medlemmer medlem) {
         return String.format(
-                "Navn: %s%nTelefonnummer: %s%nEmail: %s%nAdresse: %s%nCPR: %s%nMedlemsID: %d%nAktiv: %b%nKonkurrencesvømmer: %b%n",
+                "Navn: %s%nTelefonnummer: %s%nEmail: %s%nAdresse: %s%nCPR: %s%nMedlemsID: %d%nAktiv: %b%nKonkurrencesvømmer: %b%nBetalt: %b%nBetalingsdato: %s%nUdløbsdato: %s%n",
                 medlem.getNavn(),
                 medlem.getTelefonnummer(),
                 medlem.getEmail(),
@@ -75,10 +72,11 @@ public class Persistens {
                 medlem.getCprNr().getCprNr(),
                 medlem.getMedlemsID(),
                 medlem.isAktiv(),
-                medlem.isKonkurrencesvoemmer());
+                medlem.isKonkurrencesvoemmer(),
+                medlem.getBetaling().isStatus(),
+                medlem.getBetaling().getBetalingsDato() != null ? medlem.getBetaling().getBetalingsDato() : "Ingen",
+                medlem.getBetaling().getUdloebsDato() != null ? medlem.getBetaling().getUdloebsDato() : "Ingen");
     }
-
-    // Hjælpefunktion: Konverter en tekstlinje til et medlem
     private static Medlemmer parseMedlem(String linje) {
         String[] lines = linje.split("%n");
         String navn = lines[0].split(": ")[1].trim();
@@ -89,6 +87,9 @@ public class Persistens {
         int medlemsID = Integer.parseInt(lines[5].split(": ")[1].trim());
         boolean aktiv = Boolean.parseBoolean(lines[6].split(": ")[1].trim());
         boolean konkurrencesvoemmer = Boolean.parseBoolean(lines[7].split(": ")[1].trim());
+        boolean betalt = Boolean.parseBoolean(lines[8].split(": ")[1].trim());
+        String betalingsDato = lines[9].split(": ")[1].trim().equals("Ingen") ? null : lines[9].split(": ")[1].trim();
+        String udloebsDato = lines[10].split(": ")[1].trim().equals("Ingen") ? null : lines[10].split(": ")[1].trim();
 
         if (konkurrencesvoemmer)
         {
@@ -100,9 +101,9 @@ public class Persistens {
         }
     }
 
-    public static void gemTid(int medlemsID, String disciplin, double tid, String dato) {
+    public static void gemTid(int medlemsID, String disciplin, double tid, String dato, String navn) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILNAVN2, true))) {
-            String data = String.format("%d;%s;%.2f;%s", medlemsID, disciplin, tid, dato);
+            String data = String.format("%d;%s;%.2f;%s;%s", medlemsID, disciplin, tid, dato, navn);
             writer.write(data);
             writer.newLine();
             System.out.println("Svømmetid gemt succesfuldt!");
@@ -119,18 +120,15 @@ public class Persistens {
             String linje;
             while ((linje = reader.readLine()) != null) {
                 String[] data = linje.split(";");
-                if (data[1].equalsIgnoreCase(disciplin)) { // Filtrer på disciplin
+                if (data[1].equalsIgnoreCase(disciplin)) {
                     tider.add(linje);
                 }
             }
-            // Sorter tider efter tid (kolonne 3 i data)
             tider.sort(Comparator.comparingDouble(s -> Double.parseDouble(s.split(";")[2].replace(",", "."))));
-
-
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println("Fejl ved læsning af svømmetider: " + e.getMessage());
         }
-        // Returner kun de første 5 (eller færre, hvis der ikke er nok)
         return tider.size() > 5 ? tider.subList(0, 5) : tider;
     }
 
@@ -152,7 +150,7 @@ public class Persistens {
     public static void gemTraenerData(List<Traener> traenerListe) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILNAVN3))) {
             for (Traener traener : traenerListe) {
-                String data = formatTraener(traener); // Formater medlem som tekst
+                String data = formatTraener(traener);
                 writer.write(data);
                 writer.newLine();
             }
@@ -169,39 +167,33 @@ public class Persistens {
             String linje;
 
             while ((linje = reader.readLine()) != null) {
-                if (linje.trim().isEmpty()) { // Tjek for tomme linjer
+                if (linje.trim().isEmpty()) {
                     if (traenerData.length() > 0) {
                         try {
                             Traener traener = parseTraener(traenerData.toString());
                             traenerListe.add(traener);
                         } catch (IllegalArgumentException e) {
-                            // Ingen udskrifter her - fejl springes over
                         }
-                        traenerData.setLength(0); // Nulstil til næste træner
+                        traenerData.setLength(0);
                     }
                 } else {
                     traenerData.append(linje).append("%n");
                 }
             }
-
-            // Håndter sidste træner i filen, hvis der er data tilbage
             if (traenerData.length() > 0) {
                 try {
                     Traener traener = parseTraener(traenerData.toString());
                     traenerListe.add(traener);
                 } catch (IllegalArgumentException e) {
-                    // Ingen udskrifter her - fejl springes over
                 }
             }
 
         } catch (FileNotFoundException e) {
-            // Ingen fejludskrift her
         } catch (IOException e) {
-            // Ingen fejludskrift her
         }
 
         return traenerListe;
-}
+    }
     private static String formatTraener (Traener traener) {
         return String.format(
                 "Navn: %s%nTelefonnummer: %d%nEmail: %s%nAdresse: %s%nTræneerID: %d%n",
