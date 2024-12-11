@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public class Konkurrencesvoemmer extends Medlemmer
 {
     private List<Resultat> resultater;
+    private Traener traener;
 
     public Konkurrencesvoemmer (String navn, int telefonNummer, String email, String adresse, CprNr cprNr, int medlemsID, boolean aktiv, int alder, boolean konkurrencesvoemmer)
     {
@@ -33,5 +34,15 @@ public class Konkurrencesvoemmer extends Medlemmer
                 .sorted(Comparator.comparing(Resultat::getTid))
                 .limit(5)
                 .collect(Collectors.toList());
+    }
+
+    public Traener getTraener()
+    {
+        return traener;
+    }
+
+    public void setTraener(Traener traener)
+    {
+        this.traener = traener;
     }
 }

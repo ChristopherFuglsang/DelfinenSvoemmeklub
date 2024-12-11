@@ -6,9 +6,9 @@ CPR: 0502015575
 MedlemsID: 1
 Aktiv: true
 Konkurrencesvømmer: true
-Betalt: true
-Betalingsdato: 2024-12-10
-Udløbsdato: 2025-12-10
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
 
 Navn: merry
 Telefonnummer: 502143424
@@ -52,6 +52,18 @@ Email: Jens@gmail.com
 Adresse: Jensens vej 123
 CPR: 2809072599
 MedlemsID: 5
+Aktiv: true
+Konkurrencesvømmer: true
+Betalt: false
+Betalingsdato: Ingen
+Udløbsdato: Ingen
+
+Navn: Kristian
+Telefonnummer: 29105506
+Email: kmeyersteffensen@gmail.com
+Adresse: Ishøj Bygade 31
+CPR: 2511025691
+MedlemsID: 1
 Aktiv: true
 Konkurrencesvømmer: true
 Betalt: false
